@@ -1,5 +1,5 @@
 "use client";
-import { use, useEffect, useState } from "react";
+import {  useEffect, useState } from "react";
 import { LiveKitRoom, VideoConference} from "@livekit/components-react";
 import "@livekit/components-styles";
 import { Channel } from "@prisma/client";
@@ -11,18 +11,19 @@ interface MediaRoomProps {
     chatId: string;
     video: boolean;
     audio: boolean;
-}
+};
 const MediaRoom = ({chatId,video, audio}: MediaRoomProps) => {
-    const {user} = useUser();
+    const { user } = useUser();
     const [token, setToken] = useState("");
 
     useEffect(() => { 
         if(!user?.firstName || !user?.lastName) return;
+
         const name = `${user.firstName} ${user.lastName}`;
 
         (async () => {
             try{
-                const resp = await fetch(`api/livekit?room=${chatId}&username=${name}`);
+                const resp = await fetch(`/api/livekit?room=${chatId}&username=${name}`);
                 const data = await resp.json();
                 setToken(data.token);
             }catch(e){
@@ -39,7 +40,7 @@ const MediaRoom = ({chatId,video, audio}: MediaRoomProps) => {
         )
     }
     return(
-       <LiveKitRoom data-lk-theme="default" serverUrl={process.env.NEXT_PUBLIC_LIIVEKIT_URL} token={token} connect={true} video={video} audio={audio}>
+       <LiveKitRoom data-lk-theme="default" serverUrl={process.env.NEXT_PUBLIC_LIVEKIT_URL} token={token} connect={true} video={video} audio={audio}>
             <VideoConference/>
        </LiveKitRoom>
     )
